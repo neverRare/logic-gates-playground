@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       y * devicePixelRatio,
       radius * devicePixelRatio,
       0,
-      2 * Math.PI
+      2 * Math.PI,
     );
   }
   class Wire {
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
           this.x2,
           this.y2 + gateSize * 3,
           this.x2,
-          this.y2
+          this.y2,
         );
       } else {
         draw(
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
           midline,
           this.y2,
           this.x2,
-          this.y2
+          this.y2,
         );
       }
       context.stroke();
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.x + (gateSize * 3) / 8,
             this.y + gateSize / 4,
             gateSize / 4,
-            gateSize / 2
+            gateSize / 2,
           );
           context.beginPath();
           draw("moveTo", this.x + (gateSize * 3) / 8, this.y + gateSize / 2);
@@ -273,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
           circle(
             this.x + (gateSize * 3) / 4,
             this.y + gateSize / 2,
-            (gateSize * 3) / 16
+            (gateSize * 3) / 16,
           );
           context.fill();
           context.stroke();
@@ -286,14 +286,14 @@ document.addEventListener("DOMContentLoaded", () => {
             this.x + gateSize,
             this.y,
             this.x + gateSize,
-            this.y + gateSize / 2
+            this.y + gateSize / 2,
           );
           draw(
             "quadraticCurveTo",
             this.x + gateSize,
             this.y + gateSize,
             this.x,
-            this.y + gateSize
+            this.y + gateSize,
           );
           context.closePath();
           context.fill();
@@ -308,21 +308,21 @@ document.addEventListener("DOMContentLoaded", () => {
             this.x + gateSize / 2,
             this.y,
             this.x + gateSize,
-            this.y + gateSize / 2
+            this.y + gateSize / 2,
           );
           draw(
             "quadraticCurveTo",
             this.x + gateSize / 2,
             this.y + gateSize,
             this.x,
-            this.y + gateSize
+            this.y + gateSize,
           );
           draw(
             "quadraticCurveTo",
             this.x + gateSize / 2,
             this.y + gateSize / 2,
             this.x,
-            this.y
+            this.y,
           );
           context.closePath();
           context.fill();
@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
             circle(
               this.x + gateSize / 8,
               this.y + (gateSize * 3) / 8,
-              (gateSize * 3) / 16
+              (gateSize * 3) / 16,
             );
             context.fill();
             context.stroke();
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.x + gateSize / 4,
             this.y + gateSize / 2,
             this.x,
-            this.y + gateSize
+            this.y + gateSize,
           );
           context.stroke();
           context.beginPath();
@@ -357,21 +357,21 @@ document.addEventListener("DOMContentLoaded", () => {
             this.x + gateSize / 2,
             this.y,
             this.x + gateSize,
-            this.y + gateSize / 2
+            this.y + gateSize / 2,
           );
           draw(
             "quadraticCurveTo",
             this.x + gateSize / 2,
             this.y + gateSize,
             this.x + gateSize / 4,
-            this.y + gateSize
+            this.y + gateSize,
           );
           draw(
             "quadraticCurveTo",
             this.x + gateSize / 2,
             this.y + gateSize / 2,
             this.x + gateSize / 4,
-            this.y
+            this.y,
           );
           context.closePath();
           context.fill();
@@ -381,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
             circle(
               this.x + gateSize,
               this.y + gateSize / 2,
-              (gateSize * 3) / 16
+              (gateSize * 3) / 16,
             );
             context.fill();
             context.stroke();
@@ -396,6 +396,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let startY = 0;
   let x = 0;
   let y = 0;
+  let dragX = 0;
+  let dragY = 0;
   const wires = [];
   const gates = [];
   const toolBox = [
@@ -411,7 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("click", (event) => {
     if (
       (startX - event.x) ** 2 + (startY - event.y) ** 2 <
-      (gateSize / 4) ** 2
+        (gateSize / 4) ** 2
     ) {
       for (const gate of gates) {
         if (gate.kind === "switch" && gate.collide(event.x, event.y)) {
@@ -444,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
           selected = new Gate(
             tool.kind,
             event.x - gateSize / 2,
-            event.y - gateSize / 2
+            event.y - gateSize / 2,
           );
           gates.push(selected);
           break;
@@ -462,7 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gate.x + gateSize / 2,
             gate.y + gateSize / 2,
             event.x,
-            event.y
+            event.y,
           );
           gate.output[0] = selected;
           selected.input = gate;
@@ -472,14 +474,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
-    if (hit) {
-      event.preventDefault();
+    if (!hit) {
+      dragX = event.x;
+      dragY = event.y;
     }
+    event.preventDefault();
   });
   canvas.addEventListener("mousemove", (event) => {
     x = event.x;
     y = event.y;
-    if (event.button !== 0) {
+    console.log(event.button);
+    if (event.buttons % 2 !== 1) {
       return;
     }
     if (selected != null) {
@@ -489,8 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const [i, wire] of selected.input.entries()) {
           if (wire != null) {
             wire.x2 = event.x;
-            wire.y2 =
-              event.y -
+            wire.y2 = event.y -
               gateSize / 2 +
               ((i + 1) * gateSize) / (selected.input.length + 1);
           }
@@ -498,8 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const [i, wire] of selected.output.entries()) {
           if (wire != null) {
             wire.x1 = event.x;
-            wire.y1 =
-              event.y -
+            wire.y1 = event.y -
               gateSize / 2 +
               ((i + 1) * gateSize) / (selected.output.length + 1);
           }
@@ -509,8 +512,23 @@ document.addEventListener("DOMContentLoaded", () => {
         selected.x2 = event.x;
         selected.y2 = event.y;
       }
-      event.preventDefault();
+    } else {
+      const moveX = event.x - dragX;
+      const moveY = event.y - dragY;
+      dragX = event.x;
+      dragY = event.y;
+      for (const wire of wires) {
+        wire.x1 += moveX;
+        wire.x2 += moveX;
+        wire.y1 += moveY;
+        wire.y2 += moveY;
+      }
+      for (const gate of gates) {
+        gate.x += moveX;
+        gate.y += moveY;
+      }
     }
+    event.preventDefault();
   });
   canvas.addEventListener("mouseup", (event) => {
     const width = document.body.clientWidth;
@@ -574,8 +592,8 @@ document.addEventListener("DOMContentLoaded", () => {
     context.font = `${textSize * devicePixelRatio}px monospace`;
     context.fillStyle = "white";
     context.lineWidth = thickness * devicePixelRatio;
-    context.lineDashOffset =
-      (Date.now() * devicePixelRatio) % (devicePixelRatio * thickness * 3);
+    context.lineDashOffset = (Date.now() * devicePixelRatio) %
+      (devicePixelRatio * thickness * 3);
     context.clearRect(0, 0, canvas.width, canvas.height);
     {
       context.strokeStyle = "red";
@@ -634,13 +652,13 @@ document.addEventListener("DOMContentLoaded", () => {
           x + offset,
           y + offset,
           width + textMargin * 2,
-          textSize + textMargin * 2
+          textSize + textMargin * 2,
         );
         context.fillStyle = "black";
         context.fillText(
           text,
           (x + offset + textMargin) * devicePixelRatio,
-          (y + offset + textMargin + textSize) * devicePixelRatio
+          (y + offset + textMargin + textSize) * devicePixelRatio,
         );
       }
     }
