@@ -89,9 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
             gate.input[i] = null;
           }
         }
-        for (const [i, wire] of gate.output.entries()) {
-          if (wire === this) {
-            gate.output[i] = null;
+        if (gate.output != null) {
+          let i;
+          while (i = gate.output.indexOf(this), i !== -1) {
+            gate.output.splice(i, 1);
           }
         }
         gate.update();
@@ -120,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       switch (kind) {
         case "bulb":
-          this.output = [];
+          this.output = null;
           break;
         case "switch":
         case "not":
@@ -129,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         case "implies":
         case "xor":
         case "xnor":
-          this.output = [null];
+          this.output = [];
       }
       this.active = false;
     }
@@ -185,7 +186,11 @@ document.addEventListener("DOMContentLoaded", () => {
           this.active = left === right;
           break;
       }
-      this.output[0]?.update();
+      if (this.output != null) {
+        for (const gate of this.output) {
+          gate.update();
+        }
+      }
     }
     drawWire() {
       context.strokeStyle = dead;
@@ -200,12 +205,16 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       }
-      for (const [i, wire] of this.output.entries()) {
-        if (wire == null) {
-          const y = this.y + ((i + 1) * gateSize) / (this.output.length + 1);
+      if (this.output != null) {
+        if (this.output.length === 0) {
           context.beginPath();
-          draw("moveTo", this.x + gateSize / 2, y);
-          draw("lineTo", this.x + gateSize * 2, y);
+          draw("moveTo", this.x + gateSize / 2, this.y + gateSize / 2);
+          draw("lineTo", this.x + gateSize * 2, this.y + gateSize / 2);
+          context.stroke();
+        } else if (this.collideOutput(x, y) && selected == null) {
+          context.beginPath();
+          draw("moveTo", this.x + gateSize / 2, this.y + gateSize / 2);
+          draw("lineTo", this.x + gateSize * 2, this.y + gateSize);
           context.stroke();
         }
       }
@@ -455,18 +464,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (!hit) {
       for (const gate of gates) {
-        if (
-          gate.output.length === 1 &&
-          gate.output[0] == null &&
-          gate.collideOutput(event.x, event.y)
-        ) {
+        if (gate.output != null && gate.collideOutput(event.x, event.y)) {
+          hit = true;
           selected = new Wire(
             gate.x + gateSize / 2,
             gate.y + gateSize / 2,
             event.x,
             event.y,
           );
-          gate.output[0] = selected;
+          gate.output.push(selected);
           selected.input = gate;
           wires.push(selected);
           selected.update();
@@ -483,7 +489,6 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("mousemove", (event) => {
     x = event.x;
     y = event.y;
-    console.log(event.button);
     if (event.buttons % 2 !== 1) {
       return;
     }
@@ -499,12 +504,10 @@ document.addEventListener("DOMContentLoaded", () => {
               ((i + 1) * gateSize) / (selected.input.length + 1);
           }
         }
-        for (const [i, wire] of selected.output.entries()) {
-          if (wire != null) {
+        if (selected.output != null) {
+          for (const wire of selected.output) {
             wire.x1 = event.x;
-            wire.y1 = event.y -
-              gateSize / 2 +
-              ((i + 1) * gateSize) / (selected.output.length + 1);
+            wire.y1 = event.y;
           }
         }
       }
@@ -543,7 +546,7 @@ document.addEventListener("DOMContentLoaded", () => {
       margin <= event.y &&
       event.y <= margin + gateSize
     ) {
-      for (const wire of [...selected.input, ...selected.output]) {
+      for (const wire of [...selected.input, ...selected.output ?? []]) {
         wire?.detach();
       }
       gates.splice(gates.indexOf(selected), 1);
