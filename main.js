@@ -592,6 +592,8 @@ document.addEventListener("DOMContentLoaded", () => {
     selected = null;
   });
   function callback() {
+    const width = document.body.clientWidth;
+    const height = document.body.clientHeight;
     context.font = `${textSize * devicePixelRatio}px monospace`;
     context.fillStyle = "white";
     context.lineWidth = thickness * devicePixelRatio;
@@ -601,12 +603,54 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       context.strokeStyle = "red";
       context.beginPath();
-      const width = document.body.clientWidth;
       draw("moveTo", width - margin - gateSize, margin);
       draw("lineTo", width - margin, margin + gateSize);
       context.stroke();
+      context.beginPath();
       draw("moveTo", width - margin, margin);
       draw("lineTo", width - margin - gateSize, margin + gateSize);
+      context.stroke();
+    }
+    {
+      const left = width - margin * 2 - gateSize * 2;
+      const top = height - margin - gateSize;
+      context.strokeStyle = "black";
+      context.fillStyle = "black";
+      context.beginPath();
+      context.arc(
+        (left + gateSize / 2) * devicePixelRatio,
+        (top + gateSize / 4) * devicePixelRatio,
+        gateSize / 4,
+        -Math.PI,
+        Math.PI / 2,
+      );
+      draw("lineTo", left + gateSize / 2, top + gateSize * 3 / 4);
+      context.stroke();
+      context.beginPath();
+      circle(
+        left + gateSize / 2,
+        top + gateSize,
+        thickness,
+      );
+      context.fill();
+      context.fillStyle = "white";
+    }
+    {
+      context.strokeStyle = "black";
+      draw(
+        "strokeRect",
+        width - margin - gateSize,
+        height - margin - gateSize,
+        gateSize,
+        gateSize,
+      );
+      context.beginPath();
+      draw("moveTo", width - margin - gateSize / 2, height - margin - gateSize);
+      draw("lineTo", width - margin - gateSize / 2, height - margin);
+      context.stroke();
+      context.beginPath();
+      draw("moveTo", width - margin - gateSize, height - margin - gateSize / 2);
+      draw("lineTo", width - margin, height - margin - gateSize / 2);
       context.stroke();
     }
     for (const tool of toolBox) {
