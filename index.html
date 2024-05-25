@@ -14,6 +14,10 @@
         left: 0;
         width: 100%;
         height: 100%;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: sans-serif;
       }
       #table {
         position: absolute;
@@ -21,8 +25,11 @@
         left: 50%;
         width: 50%;
         height: 100%;
+        box-sizing: border-box;
 
         background-color: black;
+        color: white;
+        padding: 50px;
       }
       #table.full {
         left: 0;
@@ -36,6 +43,8 @@
   </head>
   <body>
     <canvas id="canvas">Javascript disabled</canvas>
-    <div id="table" class="hide"></div>
+    <div id="table" class="hide">
+      <h1>Truth Table</h1>
+    </div>
   </body>
 </html>
