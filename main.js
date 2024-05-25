@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (gate.output != null) {
           let i;
-          while (i = gate.output.indexOf(this), i !== -1) {
+          while (((i = gate.output.indexOf(this)), i !== -1)) {
             gate.output.splice(i, 1);
           }
         }
@@ -402,11 +402,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (this.label != null) {
         context.fillStyle = "black";
-        context.font = `${gateSize / 2 * devicePixelRatio}px monospace`;
+        context.font = `${(gateSize / 2) * devicePixelRatio}px monospace`;
         context.fillText(
           this.label,
           (this.x - gateSize) * devicePixelRatio,
-          (this.y + gateSize * 3 / 4) * devicePixelRatio,
+          (this.y + (gateSize * 3) / 4) * devicePixelRatio,
         );
         context.fillStyle = "white";
       }
@@ -433,6 +433,21 @@ document.addEventListener("DOMContentLoaded", () => {
     "xor",
     "xnor",
   ].map((value, i) => new Gate(value, margin * (i + 1) + gateSize * i, margin));
+  function updateTable() {
+    const switches = gates
+      .filter((gate) => gate.type === "switch")
+      .sort((a, b) => a.y - b.y);
+    if (switches.length > 26) {
+      // do what?
+    }
+    for (const [i, gate] of switches.entries()) {
+      const letter = String.fromCharCode(
+        (i + "P".charCodeAt(0) - "A".charCodeAt(0)) %
+            ("Z".charCodeAt(0) - "A".charCodeAt(0)) + "A".charCodeAt(0),
+      );
+      gate.label = letter;
+    }
+  }
   function getWidth() {
     if (tableShown) {
       return document.body.clientWidth / 2;
@@ -473,6 +488,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (gate.kind === "switch" && gate.collide(event.x, event.y)) {
           gate.active = !gate.active;
           gate.update();
+          updateTable();
         }
       }
       event.preventDefault();
@@ -583,6 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fromNew) {
       selected.update();
       fromNew = false;
+      updateTable();
     }
     if (
       selected instanceof Gate &&
@@ -591,7 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
       margin <= event.y &&
       event.y <= margin + gateSize
     ) {
-      for (const wire of [...selected.input, ...selected.output ?? []]) {
+      for (const wire of [...selected.input, ...(selected.output ?? [])]) {
         wire?.detach();
       }
       gates.splice(gates.indexOf(selected), 1);
@@ -627,6 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selected.isVertical = true;
           }
           gate.update();
+          updateTable();
           break;
         }
       }
@@ -669,14 +687,10 @@ document.addEventListener("DOMContentLoaded", () => {
         -Math.PI,
         Math.PI / 2,
       );
-      draw("lineTo", left + gateSize / 2, top + gateSize * 3 / 4);
+      draw("lineTo", left + gateSize / 2, top + (gateSize * 3) / 4);
       context.stroke();
       context.beginPath();
-      circle(
-        left + gateSize / 2,
-        top + gateSize,
-        thickness,
-      );
+      circle(left + gateSize / 2, top + gateSize, thickness);
       context.fill();
       context.fillStyle = "white";
     }
