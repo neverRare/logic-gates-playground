@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const margin = 20;
   const dead = "black";
   const live = "red";
-  const table = document.getElementById("table");
+  const tableBox = document.getElementById("table-box");
   const canvas = document.getElementById("canvas");
   const context = canvas.getContext("2d");
   function resize() {
@@ -444,10 +444,10 @@ document.addEventListener("DOMContentLoaded", () => {
         tableShown = !tableShown;
         let moveBy = document.body.clientWidth / 4;
         if (tableShown) {
-          table.classList.remove("hide");
+          tableBox.classList.remove("hide");
           moveBy *= -1;
         } else {
-          table.classList.add("hide");
+          tableBox.classList.add("hide");
         }
         for (const gate of gates) {
           gate.x += moveBy;
