@@ -400,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           break;
       }
-      if (this.label != null) {
+      if (this.label != null && tableShown) {
         context.fillStyle = "black";
         context.font = `${(gateSize / 2) * devicePixelRatio}px monospace`;
         context.fillText(
