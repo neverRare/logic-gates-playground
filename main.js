@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dead = "black";
   const live = "red";
   const tableBox = document.getElementById("table-box");
+  const table = document.getElementById("table");
   const canvas = document.getElementById("canvas");
   const context = canvas.getContext("2d");
   function resize() {
@@ -134,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
           this.output = [];
       }
       this.active = false;
+      this.label = null;
     }
     collide(x, y) {
       return (
@@ -397,6 +399,16 @@ document.addEventListener("DOMContentLoaded", () => {
             context.stroke();
           }
           break;
+      }
+      if (this.label != null) {
+        context.fillStyle = "black";
+        context.font = `${gateSize / 2 * devicePixelRatio}px monospace`;
+        context.fillText(
+          this.label,
+          (this.x - gateSize) * devicePixelRatio,
+          (this.y + gateSize * 3 / 4) * devicePixelRatio,
+        );
+        context.fillStyle = "white";
       }
     }
   }
