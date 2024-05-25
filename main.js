@@ -427,7 +427,8 @@ document.addEventListener("DOMContentLoaded", () => {
         (gateSize / 4) ** 2
     ) {
       const width = document.body.clientWidth;
-      const height = document.body.clientWidth;
+      const height = document.body.clientHeight;
+      const quarter = document.body.clientWidth / 4;
       if (
         width - gateSize - margin <= event.x &&
         event.x <= width - margin &&
@@ -436,6 +437,13 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         tableShown = true;
         table.classList.remove("hide");
+        for (const gate of gates) {
+          gate.x -= quarter;
+        }
+        for (const wire of wires) {
+          wire.x1 -= quarter;
+          wire.x2 -= quarter;
+        }
       }
       for (const gate of gates) {
         if (gate.kind === "switch" && gate.collide(event.x, event.y)) {
