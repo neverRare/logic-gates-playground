@@ -421,28 +421,40 @@ document.addEventListener("DOMContentLoaded", () => {
     "xor",
     "xnor",
   ].map((value, i) => new Gate(value, margin * (i + 1) + gateSize * i, margin));
+  function getWidth() {
+    if (tableShown) {
+      return document.body.clientWidth / 2;
+    } else {
+      return document.body.clientWidth;
+    }
+  }
   canvas.addEventListener("click", (event) => {
     if (
       (startX - event.x) ** 2 + (startY - event.y) ** 2 <
         (gateSize / 4) ** 2
     ) {
-      const width = document.body.clientWidth;
+      const width = getWidth();
       const height = document.body.clientHeight;
-      const quarter = document.body.clientWidth / 4;
       if (
         width - gateSize - margin <= event.x &&
         event.x <= width - margin &&
         height - gateSize - margin <= event.y &&
         event.y <= height - margin
       ) {
-        tableShown = true;
-        table.classList.remove("hide");
+        tableShown = !tableShown;
+        let moveBy = document.body.clientWidth / 4;
+        if (tableShown) {
+          table.classList.remove("hide");
+          moveBy *= -1;
+        } else {
+          table.classList.add("hide");
+        }
         for (const gate of gates) {
-          gate.x -= quarter;
+          gate.x += moveBy;
         }
         for (const wire of wires) {
-          wire.x1 -= quarter;
-          wire.x2 -= quarter;
+          wire.x1 += moveBy;
+          wire.x2 += moveBy;
         }
       }
       for (const gate of gates) {
@@ -555,7 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
   });
   canvas.addEventListener("mouseup", (event) => {
-    const width = document.body.clientWidth;
+    const width = getWidth();
     if (fromNew) {
       selected.update();
       fromNew = false;
@@ -613,11 +625,8 @@ document.addEventListener("DOMContentLoaded", () => {
     selected = null;
   });
   function callback() {
-    let width = document.body.clientWidth;
+    const width = getWidth();
     const height = document.body.clientHeight;
-    if (tableShown) {
-      width /= 2;
-    }
     context.font = `${textSize * devicePixelRatio}px monospace`;
     context.fillStyle = "white";
     context.lineWidth = thickness * devicePixelRatio;
