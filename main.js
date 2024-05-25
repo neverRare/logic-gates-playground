@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const switches = gates
       .filter((gate) => gate.type === "switch")
       .sort((a, b) => a.y - b.y);
-    if (switches.length > 26) {
+    if (switches.length > "Z".charCodeAt(0) - "A".charCodeAt(0)) {
       // do what?
     }
     for (const [i, gate] of switches.entries()) {
