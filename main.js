@@ -613,8 +613,11 @@ document.addEventListener("DOMContentLoaded", () => {
     selected = null;
   });
   function callback() {
-    const width = document.body.clientWidth;
+    let width = document.body.clientWidth;
     const height = document.body.clientHeight;
+    if (tableShown) {
+      width /= 2;
+    }
     context.font = `${textSize * devicePixelRatio}px monospace`;
     context.fillStyle = "white";
     context.lineWidth = thickness * devicePixelRatio;
