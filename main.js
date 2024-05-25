@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const margin = 20;
   const dead = "black";
   const live = "red";
+  const table = document.getElementById("table");
   const canvas = document.getElementById("canvas");
   const context = canvas.getContext("2d");
   function resize() {
@@ -399,6 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+  let tableShown = false;
   let fromNew = false;
   let selected = null;
   let startX = 0;
@@ -424,6 +426,17 @@ document.addEventListener("DOMContentLoaded", () => {
       (startX - event.x) ** 2 + (startY - event.y) ** 2 <
         (gateSize / 4) ** 2
     ) {
+      const width = document.body.clientWidth;
+      const height = document.body.clientWidth;
+      if (
+        width - gateSize - margin <= event.x &&
+        event.x <= width - margin &&
+        height - gateSize - margin <= event.y &&
+        event.y <= height - margin
+      ) {
+        tableShown = true;
+        table.classList.remove("hide");
+      }
       for (const gate of gates) {
         if (gate.kind === "switch" && gate.collide(event.x, event.y)) {
           gate.active = !gate.active;
