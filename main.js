@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ].map((value, i) => new Gate(value, margin * (i + 1) + gateSize * i, margin));
   function updateTable() {
     const switches = gates
-      .filter((gate) => gate.type === "switch")
+      .filter((gate) => gate.kind === "switch")
       .sort((a, b) => a.y - b.y);
     if (switches.length > "Z".charCodeAt(0) - "A".charCodeAt(0)) {
       // do what?
