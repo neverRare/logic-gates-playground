@@ -112,6 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return this.input.areAllConnected();
     }
+    allGates() {
+      return this.input.allGates();
+    }
   }
   class Gate {
     constructor(kind, x, y) {
@@ -438,6 +441,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return this.input.every((wire) => wire.areAllConnected());
     }
+    allGates() {
+      return this.input.flatMap((wire) => wire.allGates());
+    }
   }
   let tableShown = false;
   let fromNew = false;
@@ -461,6 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "xnor",
   ].map((value, i) => new Gate(value, margin * (i + 1) + gateSize * i, margin));
   function updateTable() {
+    table.innerHTML = "";
     const switches = gates
       .filter((gate) => gate.kind === "switch");
     for (const gate of switches) {
@@ -484,6 +491,10 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       gate.label = letter;
     }
+    const connectedGates = [
+      ...connectedSwitches,
+      ...new Set(bulb.allGates().filter((gate) => gate.kind !== "switch")),
+    ];
   }
   function getWidth() {
     if (tableShown) {
