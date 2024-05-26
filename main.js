@@ -101,16 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     connectedTo(gate) {
-      if (this.output == null) {
-        return false;
-      }
-      return this.output.connectedTo(gate);
+      return this.output?.connectedTo(gate) ?? false;
     }
     areAllConnected() {
-      if (this.input == null) {
-        return false;
-      }
-      return this.input.areAllConnected();
+      return this.input?.areAllConnected() ?? false;
     }
     allGates() {
       return this.input.allGates();
@@ -427,13 +421,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     connectedTo(gate) {
-      if (this === gate) {
-        return true;
-      }
-      if (this.output == null) {
-        return false;
-      }
-      return this.output.some((wire) => wire.connectedTo(gate));
+      return this === gate ||
+        (this.output?.some((wire) => wire.connectedTo(gate)) ?? false);
     }
     areAllConnected() {
       if (this.input == null) {
