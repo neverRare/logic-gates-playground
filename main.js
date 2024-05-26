@@ -850,7 +850,7 @@ document.addEventListener("DOMContentLoaded", () => {
       context.arc(
         (left + gateSize / 2) * devicePixelRatio,
         (top + gateSize / 4) * devicePixelRatio,
-        gateSize / 4,
+        gateSize / 4 * devicePixelRatio,
         -Math.PI,
         Math.PI / 2,
       );
