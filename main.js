@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (this.output == null) {
         return false;
       }
-      return gateHas(this.output, target);
+      return gateHas(this.output, gate);
     }
   }
   class Gate {
@@ -418,7 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     connectedTo(gate) {
-      if (gate === target) {
+      if (gate === gate) {
         return true;
       }
       if (this.output == null) {
