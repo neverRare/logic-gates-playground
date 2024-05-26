@@ -418,7 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     connectedTo(gate) {
-      if (gate === gate) {
+      if (this === gate) {
         return true;
       }
       if (this.output == null) {
