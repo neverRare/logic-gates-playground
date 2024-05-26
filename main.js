@@ -204,6 +204,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
+    solve(table) {
+      const left = this.input[0]?.input?.solve(table) ?? false;
+      const right = this.input[1]?.input?.solve(table) ?? false;
+      switch (this.kind) {
+        case "switch":
+          return table[this.label];
+        case "bulb":
+          return left;
+        case "not":
+          return !left;
+        case "and":
+          return left && right;
+        case "or":
+          return left || right;
+        case "implies":
+          return !left || right;
+        case "xor":
+          return left !== right;
+        case "xnor":
+          return left === right;
+      }
+    }
     drawWire() {
       context.strokeStyle = dead;
       if (this.kind !== "bulb") {
@@ -560,6 +582,22 @@ document.addEventListener("DOMContentLoaded", () => {
       headingRow.appendChild(cell);
     }
     table.appendChild(headingRow);
+    const possibilities = switches.reduce(
+      (left, right) =>
+        left.flatMap((left) =>
+          [true, false].map((value) => ({ ...left, [right.label]: value }))
+        ),
+      [{}],
+    );
+    for (const result of possibilities) {
+      const row = document.createElement("tr");
+      for (const gate of orderedGates) {
+        const cell = document.createElement("td");
+        cell.innerText = gate.solve(result) ? "T" : "F";
+        row.appendChild(cell);
+      }
+      table.appendChild(row);
+    }
   }
   function getWidth() {
     if (tableShown) {
