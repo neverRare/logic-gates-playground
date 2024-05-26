@@ -34,9 +34,22 @@
 
         overflow: auto;
       }
-      #table-box.full {
-        left: 0;
-        width: 100%;
+      table {
+        text-align: center;
+
+        border-collapse: collapse;
+      }
+      td {
+        padding: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
+
+        border-style: solid;
+        border-color: gray;
+        border-width: 4px;
+      }
+      .active td {
+        background-color: rgba(255, 0, 0, 0.8);
       }
       .hide {
         display: none;
