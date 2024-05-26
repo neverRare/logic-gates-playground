@@ -1,6 +1,6 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", () => {
-  const textSize = 20;
+  const textSize = 25;
   const textMargin = 10;
   const offset = 10;
   const thickness = 6;
@@ -433,11 +433,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (this.label != null && this.kind === "switch" && tableShown) {
         context.fillStyle = "black";
-        context.font = `${(gateSize / 2) * devicePixelRatio}px sans-serif`;
+        context.font = `${textSize * devicePixelRatio}px sans-serif`;
         context.fillText(
           this.label,
           (this.x - gateSize) * devicePixelRatio,
-          (this.y + (gateSize * 3) / 4) * devicePixelRatio,
+          (this.y + gateSize - textSize * 3 / 4) * devicePixelRatio,
         );
         context.fillStyle = "white";
       }
