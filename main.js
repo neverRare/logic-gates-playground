@@ -537,7 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     const connectedSwitches = switches
-      .filter((gate) => gate.connectedTo(bulb));
+      .filter((gate) => gate.connectedTo(bulb))
+      .sort((a, b) => a.y - b.y);
     for (const [i, gate] of connectedSwitches.entries()) {
       const letter = String.fromCharCode(
         (i + "P".charCodeAt(0) - "A".charCodeAt(0)) %
@@ -686,6 +687,9 @@ document.addEventListener("DOMContentLoaded", () => {
             wire.x1 = event.x;
             wire.y1 = event.y;
           }
+        }
+        if (selected.kind === "switch" && tableShown) {
+          updateTable();
         }
       }
       if (selected instanceof Wire) {
