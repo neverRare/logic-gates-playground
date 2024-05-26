@@ -439,10 +439,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (this.input == null) {
         return false;
       }
-      return this.input.every((wire) => wire.areAllConnected());
+      return this.input.every((wire) => wire?.areAllConnected() ?? false);
     }
     allGates() {
-      return this.input.flatMap((wire) => wire.allGates());
+      return this.input.flatMap((wire) => wire?.allGates() ?? false);
     }
   }
   let tableShown = false;
