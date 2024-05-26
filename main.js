@@ -433,7 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (this.label != null && this.kind === "switch" && tableShown) {
         context.fillStyle = "black";
-        context.font = `${(gateSize / 2) * devicePixelRatio}px monospace`;
+        context.font = `${(gateSize / 2) * devicePixelRatio}px sans-serif`;
         context.fillText(
           this.label,
           (this.x - gateSize) * devicePixelRatio,
@@ -826,7 +826,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function callback() {
     const width = getWidth();
     const height = document.body.clientHeight;
-    context.font = `${textSize * devicePixelRatio}px monospace`;
     context.fillStyle = "white";
     context.lineWidth = thickness * devicePixelRatio;
     context.lineDashOffset = (Date.now() * devicePixelRatio) %
@@ -933,6 +932,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (text != null) {
+      context.font = `${textSize * devicePixelRatio}px sans-serif`;
       let width = context.measureText(text).width / devicePixelRatio;
       context.fillStyle = "rgba(255,255,255,.8)";
       draw(
