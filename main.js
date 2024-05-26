@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const left = this.input[0]?.input;
           let leftString;
           if (
-            left.kind == null || left.kind === "switch" ||
+            left.kind == null || ["switch", "not"].includes(left.kind) ||
             (["and", "or", "xor"].includes(this.kind) &&
               this.kind === left.kind)
           ) {
@@ -487,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const right = this.input[1]?.input;
           let rightString;
           if (
-            left.kind == null || right.kind === "switch" ||
+            left.kind == null || ["switch", "not"].includes(right.kind) ||
             (["and", "or", "xor"].includes(this.kind) &&
               this.kind === right.kind)
           ) {
