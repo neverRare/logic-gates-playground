@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           break;
       }
-      if (this.label != null && tableShown) {
+      if (this.label != null && this.kind === "switch" && tableShown) {
         context.fillStyle = "black";
         context.font = `${(gateSize / 2) * devicePixelRatio}px monospace`;
         context.fillText(
@@ -480,7 +480,7 @@ document.addEventListener("DOMContentLoaded", () => {
         case "switch":
           return `${this.label}`;
         case "bulb":
-          return `${this.input[0]}`;
+          return `${this.input[0]?.input}`;
         case "not":
           const inner = this.input[0]?.input;
           if (inner == null) {
@@ -571,10 +571,13 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       gate.label = letter;
     }
-    const orderedGates = [
-      ...switches,
-      ...connectedGates.filter((gate) => gate.kind !== "switch"),
-    ];
+    const gatesBetween = connectedGates
+      .filter((gate) => gate.kind !== "switch");
+    for (const gate of gatesBetween) {
+      gate.label = `${gate}`;
+    }
+    bulb.label = `${bulb}`;
+    const orderedGates = [...switches, ...gatesBetween];
     const headingRow = document.createElement("tr");
     for (const gate of orderedGates) {
       const cell = document.createElement("td");
@@ -596,7 +599,9 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.innerText = gate.solve(result) ? "T" : "F";
         row.appendChild(cell);
       }
-      const active = switches.every((gate) => result[gate.label] === gate.active);
+      const active = switches.every(
+        (gate) => result[gate.label] === gate.active,
+      );
       if (active) {
         row.classList.add("active");
       }
@@ -884,51 +889,63 @@ document.addEventListener("DOMContentLoaded", () => {
       gate.drawWire();
       gate.draw();
     }
-    for (const tool of toolBox) {
+    let text = null;
+    outer: for (const tool of toolBox) {
       if (tool.collide(x, y)) {
-        let text;
         switch (tool.kind) {
           case "switch":
             text = "Light Switch";
-            break;
+            break outer;
           case "bulb":
             text = "Light Bulb";
-            break;
+            break outer;
           case "not":
             text = "NOT Gate";
-            break;
+            break outer;
           case "and":
             text = "AND Gate";
-            break;
+            break outer;
           case "or":
             text = "OR Gate";
-            break;
+            break outer;
           case "implies":
             text = "IMPLIES Gate";
-            break;
+            break outer;
           case "xor":
             text = "XOR Gate";
-            break;
+            break outer;
           case "xnor":
             text = "XNOR/IFF Gate";
-            break;
+            break outer;
         }
-        let width = context.measureText(text).width / devicePixelRatio;
-        context.fillStyle = "rgba(255,255,255,.8)";
-        draw(
-          "fillRect",
-          x + offset,
-          y + offset,
-          width + textMargin * 2,
-          textSize + textMargin * 2,
-        );
-        context.fillStyle = "black";
-        context.fillText(
-          text,
-          (x + offset + textMargin) * devicePixelRatio,
-          (y + offset + textMargin + textSize) * devicePixelRatio,
-        );
       }
+    }
+    if (text == null) {
+      for (const gate of gates) {
+        if (
+          gate.collide(x, y) && gate.kind !== "switch" && gate.label != null
+        ) {
+          text = gate.label;
+          break;
+        }
+      }
+    }
+    if (text != null) {
+      let width = context.measureText(text).width / devicePixelRatio;
+      context.fillStyle = "rgba(255,255,255,.8)";
+      draw(
+        "fillRect",
+        x + offset,
+        y + offset,
+        width + textMargin * 2,
+        textSize + textMargin * 2,
+      );
+      context.fillStyle = "black";
+      context.fillText(
+        text,
+        (x + offset + textMargin) * devicePixelRatio,
+        (y + offset + textMargin + textSize) * devicePixelRatio,
+      );
     }
     requestAnimationFrame(callback);
   }
