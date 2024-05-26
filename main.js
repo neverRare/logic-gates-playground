@@ -578,12 +578,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     bulb.label = `${bulb}`;
     const orderedGates = [...switches, ...gatesBetween];
-    const headingRow = document.createElement("tr");
+    const row = document.createElement("tr");
     for (const gate of orderedGates) {
       const cell = document.createElement("td");
       cell.innerText = `${gate}`;
-      headingRow.appendChild(cell);
+      row.appendChild(cell);
     }
+    const headingRow = document.createElement("thead");
+    headingRow.appendChild(row);
     table.appendChild(headingRow);
     const possibilities = switches.reduce(
       (left, right) =>
