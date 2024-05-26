@@ -549,9 +549,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const connectedGates = [
       ...connectedSwitches,
       ...new Set(
-        bulb.allGates().filter((gate) =>
-          gate.kind !== "switch" && gate.kind !== "bulb"
-        ),
+        bulb
+          .allGates()
+          .filter((gate) => gate.kind !== "switch" && gate.kind !== "bulb"),
       ),
     ];
     const headingRow = document.createElement("tr");
