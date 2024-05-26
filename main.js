@@ -464,15 +464,15 @@ document.addEventListener("DOMContentLoaded", () => {
         case "bulb":
           return null;
         case "and":
-          return "/\\";
+          return "∧";
         case "or":
-          return "\\/";
+          return "∨";
         case "implies":
-          return "->";
+          return "→";
         case "xor":
-          return "(X)";
+          return "⊕";
         case "xnor":
-          return "<->";
+          return "↔";
       }
     }
     toString() {
