@@ -106,6 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return this.output.connectedTo(gate);
     }
+    areAllConnected() {
+      if (this.input == null) {
+        return false;
+      }
+      return this.input.areAllConnected();
+    }
   }
   class Gate {
     constructor(kind, x, y) {
@@ -426,6 +432,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return this.output.some((wire) => wire.connectedTo(gate));
     }
+    areAllConnected() {
+      if (this.input == null) {
+        return false;
+      }
+      return this.input.every((wire) => wire.areAllConnected());
+    }
   }
   let tableShown = false;
   let fromNew = false;
@@ -459,6 +471,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     const bulb = bulbs[0];
+    if (!bulb.areAllConnected()) {
+      return;
+    }
     const connectedSwitches = switches
       .filter((gate) => gate.connectedTo(bulb))
       .sort((a, b) => a.y - b.y);
