@@ -471,6 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tableShown = !tableShown;
         let moveBy = document.body.clientWidth / 4;
         if (tableShown) {
+          updateTable();
           tableBox.classList.remove("hide");
           moveBy *= -1;
         } else {
@@ -488,7 +489,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (gate.kind === "switch" && gate.collide(event.x, event.y)) {
           gate.active = !gate.active;
           gate.update();
-          updateTable();
+          if (tableShown) {
+            updateTable();
+          }
         }
       }
       event.preventDefault();
@@ -599,7 +602,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fromNew) {
       selected.update();
       fromNew = false;
-      updateTable();
     }
     if (
       selected instanceof Gate &&
@@ -644,7 +646,9 @@ document.addEventListener("DOMContentLoaded", () => {
             selected.isVertical = true;
           }
           gate.update();
-          updateTable();
+          if (tableShown) {
+            updateTable();
+          }
           break;
         }
       }
