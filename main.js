@@ -100,6 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
         gate.update();
       }
     }
+    connectedTo(gate) {
+      if (this.output == null) {
+        return false;
+      }
+      return gateHas(this.output, target);
+    }
   }
   class Gate {
     constructor(kind, x, y) {
@@ -411,6 +417,15 @@ document.addEventListener("DOMContentLoaded", () => {
         context.fillStyle = "white";
       }
     }
+    connectedTo(gate) {
+      if (gate === target) {
+        return true;
+      }
+      if (this.output == null) {
+        return false;
+      }
+      return this.output.some((wire) => wire.connectedTo(gate));
+    }
   }
   let tableShown = false;
   let fromNew = false;
@@ -435,12 +450,19 @@ document.addEventListener("DOMContentLoaded", () => {
   ].map((value, i) => new Gate(value, margin * (i + 1) + gateSize * i, margin));
   function updateTable() {
     const switches = gates
-      .filter((gate) => gate.kind === "switch")
-      .sort((a, b) => a.y - b.y);
-    if (switches.length > "Z".charCodeAt(0) - "A".charCodeAt(0)) {
-      // do what?
+      .filter((gate) => gate.kind === "switch");
+    for (const gate of switches) {
+      gate.label = null;
     }
-    for (const [i, gate] of switches.entries()) {
+    const bulbs = gates.filter((gate) => gate.kind === "bulb");
+    if (bulbs.length !== 1) {
+      return;
+    }
+    const bulb = bulbs[0];
+    const connectedSwitches = switches
+      .filter((gate) => gate.connectedTo(bulb))
+      .sort((a, b) => a.y - b.y);
+    for (const [i, gate] of connectedSwitches.entries()) {
       const letter = String.fromCharCode(
         (i + "P".charCodeAt(0) - "A".charCodeAt(0)) %
             ("Z".charCodeAt(0) - "A".charCodeAt(0)) + "A".charCodeAt(0),
