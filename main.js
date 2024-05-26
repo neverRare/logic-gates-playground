@@ -596,6 +596,10 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.innerText = gate.solve(result) ? "T" : "F";
         row.appendChild(cell);
       }
+      const active = switches.every((gate) => result[gate.label]);
+      if (active) {
+        row.classList.add("active");
+      }
       table.appendChild(row);
     }
   }
