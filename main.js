@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return this.input.every((wire) => wire?.areAllConnected() ?? false);
     }
     allGates() {
-      return this.input.flatMap((wire) => wire?.allGates() ?? false);
+      return [...this.input.flatMap((wire) => wire?.allGates() ?? false), this];
     }
     operator() {
       switch (this.kind) {
@@ -548,7 +548,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const connectedGates = [
       ...connectedSwitches,
-      ...new Set(bulb.allGates().filter((gate) => gate.kind !== "switch")),
+      ...new Set(
+        bulb.allGates().filter((gate) =>
+          gate.kind !== "switch" && gate.kind !== "bulb"
+        ),
+      ),
     ];
     const headingRow = document.createElement("tr");
     for (const gate of connectedGates) {
