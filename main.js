@@ -433,6 +433,72 @@ document.addEventListener("DOMContentLoaded", () => {
     allGates() {
       return this.input.flatMap((wire) => wire?.allGates() ?? false);
     }
+    operator() {
+      switch (this.kind) {
+        case "not":
+          return "~";
+        case "switch":
+          return null;
+        case "bulb":
+          return null;
+        case "and":
+          return "/\\";
+        case "or":
+          return "\\/";
+        case "implies":
+          return "->";
+        case "xor":
+          return "(X)";
+        case "xnor":
+          return "<->";
+      }
+    }
+    toString() {
+      switch (this.kind) {
+        case "switch":
+          return `${this.label}`;
+        case "bulb":
+          return `${this.input[0]}`;
+        case "not":
+          const inner = this.input[0]?.input;
+          if (inner == null) {
+            return "~null";
+          } else if (inner.kind === "not" || inner.kind === "switch") {
+            return `~${inner}`;
+          } else {
+            return `~(${inner})`;
+          }
+        case "and":
+        case "or":
+        case "implies":
+        case "xor":
+        case "xnor":
+          const left = this.input[0]?.input;
+          let leftString;
+          if (
+            left.kind == null || left.kind === "switch" ||
+            (["and", "or", "xor"].includes(this.kind) &&
+              this.kind === left.kind)
+          ) {
+            leftString = `${left}`;
+          } else {
+            leftString = `(${left})`;
+          }
+          const right = this.input[1]?.input;
+          let rightString;
+          if (
+            left.kind == null || right.kind === "switch" ||
+            (["and", "or", "xor"].includes(this.kind) &&
+              this.kind === right.kind)
+          ) {
+            rightString = `${right}`;
+          } else {
+            rightString = `(${right})`;
+          }
+          const operator = this.operator();
+          return `${leftString} ${operator} ${rightString}`;
+      }
+    }
   }
   let tableShown = false;
   let fromNew = false;
@@ -484,6 +550,13 @@ document.addEventListener("DOMContentLoaded", () => {
       ...connectedSwitches,
       ...new Set(bulb.allGates().filter((gate) => gate.kind !== "switch")),
     ];
+    const headingRow = document.createElement("tr");
+    for (const gate of connectedGates) {
+      const cell = document.createElement("td");
+      cell.innerText = `${gate}`;
+      headingRow.appendChild(cell);
+    }
+    table.appendChild(headingRow);
   }
   function getWidth() {
     if (tableShown) {
