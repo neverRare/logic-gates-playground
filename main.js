@@ -523,9 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ].map((value, i) => new Gate(value, margin * (i + 1) + gateSize * i, margin));
   function updateTable() {
     table.innerHTML = "";
-    const switches = gates
-      .filter((gate) => gate.kind === "switch");
-    for (const gate of switches) {
+    for (const gate of gates) {
       gate.label = null;
     }
     const bulbs = gates.filter((gate) => gate.kind === "bulb");
@@ -536,26 +534,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!bulb.areAllConnected()) {
       return;
     }
-    const connectedSwitches = switches
-      .filter((gate) => gate.connectedTo(bulb))
-      .sort((a, b) => a.y - b.y);
-    for (const [i, gate] of connectedSwitches.entries()) {
+    const connectedGates = [
+      ...new Set(
+        bulb
+          .allGates()
+          .filter((gate) => gate.kind !== "bulb"),
+      ),
+    ];
+    const switches = connectedGates.filter((gate) => gate.kind === "switch");
+    for (const [i, gate] of switches.entries()) {
       const letter = String.fromCharCode(
         (i + "P".charCodeAt(0) - "A".charCodeAt(0)) %
             ("Z".charCodeAt(0) - "A".charCodeAt(0)) + "A".charCodeAt(0),
       );
       gate.label = letter;
     }
-    const connectedGates = [
-      ...connectedSwitches,
-      ...new Set(
-        bulb
-          .allGates()
-          .filter((gate) => gate.kind !== "switch" && gate.kind !== "bulb"),
-      ),
+    const orderedGates = [
+      ...switches,
+      ...connectedGates.filter((gate) => gate.kind !== "switch"),
     ];
     const headingRow = document.createElement("tr");
-    for (const gate of connectedGates) {
+    for (const gate of orderedGates) {
       const cell = document.createElement("td");
       cell.innerText = `${gate}`;
       headingRow.appendChild(cell);
@@ -687,9 +686,6 @@ document.addEventListener("DOMContentLoaded", () => {
             wire.x1 = event.x;
             wire.y1 = event.y;
           }
-        }
-        if (selected.kind === "switch" && tableShown) {
-          updateTable();
         }
       }
       if (selected instanceof Wire) {
