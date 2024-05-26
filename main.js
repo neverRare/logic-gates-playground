@@ -574,6 +574,9 @@ document.addEventListener("DOMContentLoaded", () => {
             wire.y1 = event.y;
           }
         }
+        if (selected.kind === "switch" && tableShown) {
+          updateTable();
+        }
       }
       if (selected instanceof Wire) {
         selected.x2 = event.x;
@@ -602,6 +605,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fromNew) {
       selected.update();
       fromNew = false;
+      if (selected.kind === "switch" && tableShown) {
+        updateTable();
+      }
     }
     if (
       selected instanceof Gate &&
