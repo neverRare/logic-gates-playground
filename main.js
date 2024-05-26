@@ -614,6 +614,9 @@ document.addEventListener("DOMContentLoaded", () => {
         wire?.detach();
       }
       gates.splice(gates.indexOf(selected), 1);
+      if (tableShown) {
+        updateTable();
+      }
     }
     if (selected instanceof Wire) {
       let attached = false;
