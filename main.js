@@ -605,9 +605,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fromNew) {
       selected.update();
       fromNew = false;
-      if (selected.kind === "switch" && tableShown) {
-        updateTable();
-      }
     }
     if (
       selected instanceof Gate &&
