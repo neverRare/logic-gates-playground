@@ -842,26 +842,26 @@ document.addEventListener("DOMContentLoaded", () => {
       draw("lineTo", width - margin - gateSize, margin + gateSize);
       context.stroke();
     }
-    {
-      const left = width - margin * 2 - gateSize * 2;
-      const top = height - margin - gateSize;
-      context.strokeStyle = "black";
-      context.fillStyle = "black";
-      context.beginPath();
-      context.arc(
-        (left + gateSize / 2) * devicePixelRatio,
-        (top + gateSize / 4) * devicePixelRatio,
-        gateSize / 4 * devicePixelRatio,
-        -Math.PI,
-        Math.PI / 2,
-      );
-      draw("lineTo", left + gateSize / 2, top + (gateSize * 3) / 4);
-      context.stroke();
-      context.beginPath();
-      circle(left + gateSize / 2, top + gateSize, thickness);
-      context.fill();
-      context.fillStyle = "white";
-    }
+    // {
+    //   const left = width - margin * 2 - gateSize * 2;
+    //   const top = height - margin - gateSize;
+    //   context.strokeStyle = "black";
+    //   context.fillStyle = "black";
+    //   context.beginPath();
+    //   context.arc(
+    //     (left + gateSize / 2) * devicePixelRatio,
+    //     (top + gateSize / 4) * devicePixelRatio,
+    //     gateSize / 4 * devicePixelRatio,
+    //     -Math.PI,
+    //     Math.PI / 2,
+    //   );
+    //   draw("lineTo", left + gateSize / 2, top + (gateSize * 3) / 4);
+    //   context.stroke();
+    //   context.beginPath();
+    //   circle(left + gateSize / 2, top + gateSize, thickness);
+    //   context.fill();
+    //   context.fillStyle = "white";
+    // }
     {
       context.strokeStyle = "black";
       draw(
